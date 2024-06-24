@@ -43,7 +43,7 @@ printf 'Archive: demo.rar\nDetails: RAR 5\n\nAttributes      Size       Date   T
 This payload includes a fake listing where virus.exe is replaced with notvirus.pdf. The ANSI escape sequence \e[8m is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
 
 ## Result
-In the screenshot below, you can see a large gap between the output and the shell prompt. This gap is due to the original file listing being outputted but rendered invisible using \e[8m. While experienced command line users may find this suspicious, less experienced users could easily be tricked.
+In the screenshot above, you can see a large gap between the output and the shell prompt. This gap is due to the original file listing being outputted but rendered invisible using \e[8m. While experienced command line users may find this suspicious, less experienced users could easily be tricked.
 
 
 ## Conclusion
