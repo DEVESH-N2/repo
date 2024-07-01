@@ -32,7 +32,7 @@ First, we will place our virus.exe file inside a RAR archive:
 ```bash
 $ ls myfolder
 virus.sh
-$ rar a demo.rar myfolder
+$ rar a demo.rar script.sh myfolder 
 ```
 
 Next, we will add the following payload to the comment section:
