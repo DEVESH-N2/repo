@@ -21,7 +21,7 @@ To check if ANSI escape sequences are filtered out in the comment section, we ca
 ```bash
 printf 'Hello \033[32mTHIS IS GREEN\033[0m\007' | rar c demo.rar
 ```
-Upon executing rar l demo.rar, the output shows "THIS IS GREEN" in green, indicating that the comment field does not filter ANSI escape sequences.
+Upon executing ``rar l demo.rar``, the output shows "THIS IS GREEN" in green, indicating that the comment field does not filter ANSI escape sequences.
 
 Exploitation
 This vulnerability can be exploited in various ways. Here, we will demonstrate an exploit suited for WinRAR.
@@ -40,7 +40,9 @@ Next, we will add the following payload to the comment section:
 printf 'Archive: demo.rar\nDetails: RAR 5\n\nAttributes      Size       Date   Time   Name\n----------- ---------  ---------- -----  ---------\n-rw-r--r–        7    2024-05-19  16:26  notvirus.pdf\n-rw-r--r–      193    2024-05-19  16:26  script.sh\n----------- ---------  ---------- -----  ---------\n               200                          2\e[8m' | rar c demo.rar
 ```
 
-This payload includes a fake listing where virus.sh is replaced with notvirus.pdf. The ANSI escape sequence \e[8m is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
+This payload includes a fake listing where `virus.sh` is replaced with `notvirus.pdf`. The ANSI escape sequence `\e[8m` is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
+
+The `script.sh` file inside `demo.rar` is designed to run all the .sh files inside myfolder so that the victim doesn't find anything suspicious when asked to run the `script.sh`, which would actually end up running the `virus.sh`. By running `script.sh`, all the shell scripts within myfolder will be executed in sequence. This is useful for batch processing tasks, ensuring that each script is run without having to execute them individually.
 
 ## Result
 In the screenshot above, you can see a large gap between the output and the shell prompt. This gap is due to the original file listing being outputted but rendered invisible using \e[8m. While experienced command line users may find this suspicious, less experienced users could easily be tricked.
